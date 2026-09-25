@@ -92,9 +92,9 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: "GitHub",
-    url: "https://github.com/rishusingh",
+    url: "https://github.com/RISHU1510?tab=repositories",
     icon: "Github",
-    handle: "@rishusingh",
+    handle: "@RISHU1510",
   },
 ];
 
@@ -175,8 +175,8 @@ export const projectsData: Project[] = [
       "An intelligent behavioral analytics system that parses and analyzes unstructured social media text data using Deep Learning architectures and Natural Language Processing to accurately detect and classify psychological personality traits.",
     image: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=85",
     tags: ["Deep Learning", "NLP", "Python", "Social Media Analytics", "Machine Learning", "Scikit-Learn"],
-    githubUrl: "https://github.com/rishusingh/personality-detection-system",
-    liveDemoUrl: "https://github.com/rishusingh/personality-detection-system",
+    githubUrl: "https://github.com/RISHU1510?tab=repositories",
+    liveDemoUrl: "https://github.com/RISHU1510?tab=repositories",
     featured: true,
     caseStudy: {
       problem:
@@ -216,8 +216,8 @@ export const projectsData: Project[] = [
       "Hardware and software IoT seismic monitoring system engineered with Arduino Uno/Nano, SW-420 high-sensitivity vibration sensor, and ADXL335/ADXL345 accelerometers triggering instantaneous audible buzzer, LED, and IoT alerts.",
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85",
     tags: ["Arduino Uno/Nano", "SW-420 Sensor", "ADXL335/345", "IoT Alert", "C/C++", "Hardware Interfacing"],
-    githubUrl: "https://github.com/rishusingh/earthquake-detection-iot",
-    liveDemoUrl: "https://github.com/rishusingh/earthquake-detection-iot",
+    githubUrl: "https://github.com/RISHU1510?tab=repositories",
+    liveDemoUrl: "https://github.com/RISHU1510?tab=repositories",
     featured: true,
     caseStudy: {
       problem:
@@ -257,8 +257,8 @@ export const projectsData: Project[] = [
       "A responsive commercial corporate website engineered as the final capstone project during the web development internship at Inventrom Bolt IoT Pvt. Ltd., showcasing hardware products and cloud integrations.",
     image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=85",
     tags: ["HTML5", "CSS3", "JavaScript", "UI/UX", "Corporate Web", "Inventrom Bolt IoT"],
-    githubUrl: "https://github.com/rishusingh/inventrom-website",
-    liveDemoUrl: "https://github.com/rishusingh/inventrom-website",
+    githubUrl: "https://github.com/RISHU1510?tab=repositories",
+    liveDemoUrl: "https://github.com/RISHU1510?tab=repositories",
     featured: true,
     caseStudy: {
       problem:
@@ -298,8 +298,8 @@ export const projectsData: Project[] = [
       "Interactive movie discovery and search application built with HTML, CSS, and JavaScript during the Inventrom internship, featuring dynamic query filtering, modal details, and responsive styling.",
     image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1200&q=85",
     tags: ["HTML5", "CSS3", "JavaScript", "REST API", "DOM Manipulation", "Responsive Design"],
-    githubUrl: "https://github.com/rishusingh/movie-finder-app",
-    liveDemoUrl: "https://github.com/rishusingh/movie-finder-app",
+    githubUrl: "https://github.com/RISHU1510?tab=repositories",
+    liveDemoUrl: "https://github.com/RISHU1510?tab=repositories",
     featured: true,
     caseStudy: {
       problem:
@@ -339,8 +339,8 @@ export const projectsData: Project[] = [
       "A triad of supervised machine learning solutions developed at BharatIntern: multivariate Linear Regression for real estate price forecasting, classification for wine quality assessment, and KNN for botanical species clustering.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85",
     tags: ["Machine Learning", "Linear Regression", "KNN", "Classification", "Python", "Scikit-Learn", "Pandas"],
-    githubUrl: "https://github.com/rishusingh/bharatintern-machine-learning",
-    liveDemoUrl: "https://github.com/rishusingh/bharatintern-machine-learning",
+    githubUrl: "https://github.com/RISHU1510?tab=repositories",
+    liveDemoUrl: "https://github.com/RISHU1510?tab=repositories",
     featured: true,
     caseStudy: {
       problem:

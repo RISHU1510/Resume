@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, CheckCircle, ArrowRight, Layers, Target, AlertCircle, BarChart } from 'lucide-react';
+import {
+  X,
+  ExternalLink,
+  Github,
+  CheckCircle,
+  ArrowRight,
+  Layers,
+  Target,
+  AlertCircle,
+  BarChart,
+  Bookmark,
+  BookmarkCheck,
+  LogIn,
+} from 'lucide-react';
 import { Project } from '../../types';
+import { useAuth } from '../../context/AuthContext';
+import { toggleProjectBookmark, fetchUserBookmarks } from '../../lib/firebase';
+import { FirebaseIcon } from '../common/FirebaseIcon';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -9,6 +25,46 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
+  const { user, loginWithGoogle } = useAuth();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isSavingBookmark, setIsSavingBookmark] = useState(false);
+
+  useEffect(() => {
+    if (user && project) {
+      checkBookmark();
+    } else {
+      setIsBookmarked(false);
+    }
+  }, [user, project]);
+
+  const checkBookmark = async () => {
+    if (!user || !project) return;
+    try {
+      const bookmarks = await fetchUserBookmarks(user.uid);
+      setIsBookmarked(bookmarks.includes(project.id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleBookmarkToggle = async () => {
+    if (!project) return;
+    if (!user) {
+      await loginWithGoogle();
+      return;
+    }
+
+    setIsSavingBookmark(true);
+    try {
+      const added = await toggleProjectBookmark(user.uid, project.id);
+      setIsBookmarked(added);
+    } catch (err) {
+      console.error('Bookmark error:', err);
+    } finally {
+      setIsSavingBookmark(false);
+    }
+  };
+
   if (!project) return null;
 
   return (
@@ -46,7 +102,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
             <button
               onClick={onClose}
               data-cursor="CLOSE"
-              className="p-1.5 rounded hover:bg-[#881337]/20 text-[#bbb5a7] hover:text-[#f7f4ed] transition-colors"
+              className="p-1.5 rounded hover:bg-[#881337]/20 text-[#bbb5a7] hover:text-[#f7f4ed] transition-colors cursor-pointer"
               aria-label="Close Case Study"
             >
               <X className="w-5 h-5" />
@@ -75,7 +131,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                   href={project.liveDemoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded bg-[#881337] hover:bg-[#9f1239] px-5 py-2.5 text-xs font-mono uppercase tracking-wider text-white transition-colors"
+                  className="inline-flex items-center gap-2 rounded bg-[#881337] hover:bg-[#9f1239] px-5 py-2.5 text-xs font-mono uppercase tracking-wider text-white transition-colors cursor-pointer"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Launch Live Demo</span>
@@ -85,11 +141,41 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded border border-[#f7f4ed]/20 bg-[#161311] hover:border-[#881337] px-5 py-2.5 text-xs font-mono uppercase tracking-wider text-[#f7f4ed] transition-colors"
+                  className="inline-flex items-center gap-2 rounded border border-[#f7f4ed]/20 bg-[#161311] hover:border-[#881337] px-5 py-2.5 text-xs font-mono uppercase tracking-wider text-[#f7f4ed] transition-colors cursor-pointer"
                 >
                   <Github className="w-4 h-4 text-[#881337]" />
                   <span>Source Repository</span>
                 </a>
+
+                {/* Firestore Bookmark Button */}
+                <button
+                  onClick={handleBookmarkToggle}
+                  disabled={isSavingBookmark}
+                  data-cursor="BOOKMARK"
+                  className={`inline-flex items-center gap-2 rounded border px-4 py-2.5 text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
+                    isBookmarked
+                      ? 'bg-rose-950/40 border-rose-600/70 text-rose-300 shadow-[0_0_15px_rgba(225,29,72,0.2)]'
+                      : 'border-[#f7f4ed]/20 bg-[#161311] hover:border-rose-600/50 text-[#bbb5a7] hover:text-[#f7f4ed]'
+                  }`}
+                  title={user ? 'Save to your Firestore bookmarks' : 'Sign in with Google to bookmark'}
+                >
+                  {isBookmarked ? (
+                    <>
+                      <BookmarkCheck className="w-4 h-4 text-rose-400 shrink-0" />
+                      <span>Saved in Firestore</span>
+                    </>
+                  ) : user ? (
+                    <>
+                      <Bookmark className="w-4 h-4 text-zinc-400 shrink-0" />
+                      <span>Bookmark Project</span>
+                    </>
+                  ) : (
+                    <>
+                      <FirebaseIcon className="w-4 h-4 shrink-0" />
+                      <span>Sign in to Bookmark</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
@@ -107,9 +193,9 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
               <div className="p-6 rounded border border-[#f7f4ed]/10 bg-[#141210]">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337] mb-3">
                   <AlertCircle className="w-4 h-4" />
-                  <span>The Challenge & Problem</span>
+                  <span>The Challenge &amp; Problem</span>
                 </div>
-                <p className="text-sm sm:text-base text-[#bbb5a7] font-light leading-relaxed">
+                <p className="text-sm leading-relaxed text-[#ded8cb]">
                   {project.caseStudy.problem}
                 </p>
               </div>
@@ -117,80 +203,49 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
               <div className="p-6 rounded border border-[#f7f4ed]/10 bg-[#141210]">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337] mb-3">
                   <Target className="w-4 h-4" />
-                  <span>The Objective & Goal</span>
+                  <span>Objective &amp; Requirements</span>
                 </div>
-                <p className="text-sm sm:text-base text-[#bbb5a7] font-light leading-relaxed">
-                  {project.caseStudy.goal}
+                <p className="text-sm leading-relaxed text-[#ded8cb]">
+                  {project.caseStudy.solution}
                 </p>
               </div>
             </div>
 
-            {/* The Solution & Architecture */}
-            <div className="p-6 sm:p-8 rounded border border-[#881337]/30 bg-[#151211]">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337] mb-3">
+            {/* Technical Stack Tags */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337]">
                 <Layers className="w-4 h-4" />
-                <span>Architecture & Solution</span>
+                <span>Technologies &amp; Architecture</span>
               </div>
-              <p className="text-base sm:text-lg text-[#f7f4ed] font-light leading-relaxed mb-6">
-                {project.caseStudy.solution}
-              </p>
-
-              {/* Technologies list badges */}
-              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-[#f7f4ed]/10">
-                <span className="text-xs font-mono text-[#bbb5a7] mr-2">Stack:</span>
-                {project.caseStudy.technologies.map((t, idx) => (
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
                   <span
-                    key={idx}
-                    className="text-xs font-mono px-3 py-1 rounded bg-[#1c1816] text-[#f7f4ed] border border-[#f7f4ed]/10"
+                    key={tag}
+                    className="text-xs font-mono px-3 py-1.5 rounded-full border border-[#f7f4ed]/15 bg-[#161311] text-[#bbb5a7]"
                   >
-                    {t}
+                    {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Development Process Steps */}
-            <div>
-              <h3 className="font-serif-display text-2xl text-[#f7f4ed] font-medium mb-4">
-                Engineering & Development Lifecycle
-              </h3>
-              <div className="space-y-3">
-                {project.caseStudy.developmentProcess.map((step, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-4 p-4 rounded border border-[#f7f4ed]/5 bg-[#141210]"
+            {/* Key Deliverables & Outcomes */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337]">
+                <CheckCircle className="w-4 h-4" />
+                <span>Key Deliverables &amp; Outcomes</span>
+              </div>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {(project.caseStudy.developmentProcess || []).map((step, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 p-4 rounded border border-[#f7f4ed]/10 bg-[#141210]"
                   >
-                    <span className="font-mono text-xs text-[#881337] font-semibold mt-0.5">
-                      0{idx + 1}
-                    </span>
-                    <p className="text-sm text-[#bbb5a7] font-light leading-relaxed">
-                      {step}
-                    </p>
-                  </div>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#881337] shrink-0 mt-2" />
+                    <span className="text-xs leading-relaxed text-[#ded8cb]">{step}</span>
+                  </li>
                 ))}
-              </div>
-            </div>
-
-            {/* Key Results & Verified Metrics */}
-            <div className="p-6 rounded border border-[#f7f4ed]/10 bg-[#13110f]">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#881337] mb-3">
-                <BarChart className="w-4 h-4" />
-                <span>Verifiable Impact & Outcome</span>
-              </div>
-              <p className="text-base text-[#f7f4ed] font-light leading-relaxed mb-4">
-                {project.caseStudy.result}
-              </p>
-
-              {project.caseStudy.metrics && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-[#f7f4ed]/10">
-                  {project.caseStudy.metrics.map((metric, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs font-mono text-[#bbb5a7]">
-                      <CheckCircle className="w-3.5 h-3.5 text-[#881337] shrink-0" />
-                      <span>{metric}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              </ul>
             </div>
           </div>
         </motion.div>

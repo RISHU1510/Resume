@@ -59,17 +59,37 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Quick Section Anchors */}
-          <div className="flex flex-wrap items-center gap-6 text-xs font-mono uppercase tracking-wider text-[#bbb5a7]">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="hover:text-[#f7f4ed] hover:underline underline-offset-4 transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+          {/* Quick Section Anchors & Social Links */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div className="flex flex-wrap items-center gap-6 text-xs font-mono uppercase tracking-wider text-[#bbb5a7]">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="hover:text-[#f7f4ed] hover:underline underline-offset-4 transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4 sm:border-l sm:border-[#f7f4ed]/10 sm:pl-6">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${social.name}`}
+                  className="p-2 rounded border border-[#f7f4ed]/10 text-[#bbb5a7] hover:text-[#f7f4ed] hover:border-[#881337] transition-all bg-[#141210]"
+                  title={social.name}
+                >
+                  {social.name === 'GitHub' && <Github className="w-3.5 h-3.5 text-rose-400" />}
+                  {social.name === 'LinkedIn' && <Linkedin className="w-3.5 h-3.5 text-sky-400" />}
+                  {social.name === 'Email' && <Mail className="w-3.5 h-3.5 text-rose-300" />}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
